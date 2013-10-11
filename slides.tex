@@ -1,0 +1,400 @@
+\setuppapersize[S6][S6]
+
+\usemodule[vim]
+%\usemodule[simplefonts][size=15pt]
+%\setmainfont[Tex Gyre Pagella]
+%\setmonofont[Tex Gyre Cursor]
+%\setsansfont[Tex Gyre Heros]
+\switchtobodyfont[modern,20pt]
+
+\definevimtyping [RUBY]  [syntax=ruby]
+
+\setuppagenumbering[state=stop]
+
+\setuptolerance[verytolerant,stretch]
+
+\setupalign[lohi]
+%\showboxes
+
+%\setuplayout[grid=yes]
+
+\startstandardmakeup[align=middle]
+  {\tfd News!!!}
+\stopstandardmakeup
+\page
+
+\startstandardmakeup[align=middle]
+  Rails Rumble 2013\\
+  http://railsrumble.com/\\
+  Signup ends Oct. 13th
+\stopstandardmakeup
+\page
+
+\startstandardmakeup[align=middle]
+  http://gotocon.com/berlin-2013/
+\stopstandardmakeup
+\page
+
+\startstandardmakeup[align=middle]
+{\tfd URM}
+\stopstandardmakeup
+\page
+
+\startstandardmakeup[align=middle]
+Unsung Rubyist of the Month
+\stopstandardmakeup
+\page
+
+\startstandardmakeup[align=middle]
+http://www.ruby-mine.de/wonado\\
+http://www.ruby-mine.de/regexp
+\stopstandardmakeup
+\page
+
+\startstandardmakeup[align=middle]
+ {\tfd Virtus}
+\stopstandardmakeup
+\page
+
+\startstandardmakeup[align=middle]
+ {\tfd DataMapper:\\ The Awesome Parts}
+\stopstandardmakeup
+
+\page
+This is a partial extraction of the DataMapper Property
+API with various modifications and improvements. The goal is to provide a common API
+for defining attributes on a model...
+\page
+
+The README covers (almost) all, so I am not iterating through the examples.
+\page
+
+\startstandardmakeup[align=middle]
+\startRUBY
+class User
+  include Virtus.model
+
+  attribute :name, String
+  attribute :age, Integer
+  attribute :birthday, Date
+  attribute :registered, Time,
+    :default =>->() { Time.now }
+end
+\stopRUBY
+\stopstandardmakeup
+
+\page
+
+\startstandardmakeup[align=middle]
+\startRUBY
+json = '{"name": "Florian Gilcher",
+         "age": 30,
+         "birthday": "October 4th, 1983"}'
+parsed = JSON.parse(json)
+user = User.new(parsed)
+#=> #<User:0x000001008d8b68
+ @age=30,
+ @birthday=
+  #<DateTime: 1983-10-04T...>,
+ @name="Florian Gilcher",
+ @registered="....">
+\stopRUBY
+\stopstandardmakeup
+
+\page
+
+\startstandardmakeup[align=middle]
+\startRUBY
+module Named
+  include Virtus.module
+
+  attribute :name, String
+end
+
+class User
+  include Named
+end
+
+u = User.new
+u.attributes = {:name => "Florian Gilcher"}
+\stopRUBY
+\stopstandardmakeup
+
+\page
+
+\startstandardmakeup[align=middle]
+\startRUBY
+class Location 
+  include Virtus.value_object
+
+  values do
+    attribute :lat, BigDecimal
+    attribute :lon, BigDecimal
+  end
+end
+
+Location.new(:lat => 1, :lon => 1) == 
+  Location.new(:lat => 1, :lon => 1)
+\stopRUBY
+\stopstandardmakeup
+
+\page
+
+All this actually consisted of 3 parts:
+
+\startitemize
+\item coercion
+\item constructor
+\item mass assignment
+\stopitemize
+
+\page
+
+\startstandardmakeup[align=middle]
+\startRUBY
+
+class User
+  include Virtus.model(
+    :constructor => false,
+    :mass_assignment => false
+  )
+
+  attribute :name, String
+  attribute :age, Integer
+  attribute :birthday, DateTime
+end
+
+\stopRUBY
+\stopstandardmakeup
+
+\page
+
+\startstandardmakeup[align=middle]
+\startRUBY
+
+class User
+  include Virtus.model(:coerce => false)
+
+  attribute :name, String
+  attribute :age, Integer
+  attribute :birthday, DateTime
+end
+
+u = User.new
+u.age = "123"
+u.age #=> "123"
+
+\stopRUBY
+\stopstandardmakeup
+
+\page
+
+\startstandardmakeup[align=middle]
+\startRUBY
+
+class Named
+  include Virtus.module(:coerce => false)
+
+  attribute :name, String
+end
+
+\stopRUBY
+\stopstandardmakeup
+
+\page
+
+\startstandardmakeup[align=middle]
+\startRUBY
+
+class ShowOff
+  attribute :users, Set[User]
+  attribute :tags, Array[String]
+  attribute :meta, Hash[Symbol => String],
+    :coerce => false
+  attribute :i_dont_know_what_this_is_good_for,
+    Hash[String => Hash[String => User]]
+end
+\stopRUBY
+\stopstandardmakeup
+
+\page
+
+\startstandardmakeup[align=middle]
+What is this good for?
+\stopstandardmakeup
+
+\page
+
+\startstandardmakeup[align=middle]
+Object graph prototyping
+\stopstandardmakeup
+
+\page
+
+\startstandardmakeup[align=middle]
+ActiveRecord::serialize
+\stopstandardmakeup
+
+\page
+
+\startstandardmakeup[align=middle]
+\startRUBY
+class User < ActiveRecord::Base
+  serialize :preferences
+end
+
+User.new(:name => "fgilcher",
+         :preferences => {
+           :columns => 3,
+           :scheme => "dark"}
+         })
+\stopRUBY
+\stopstandardmakeup
+
+\page
+
+\startstandardmakeup[align=middle]
+\startRUBY
+class User < ActiveRecord::Base
+  serialize :preferences
+end
+
+User.new(:name => "fgilcher",
+         :preferences => {
+           :columns => 3,
+           :scheme => "dark"}
+         })
+\stopRUBY
+\stopstandardmakeup
+
+\page
+
+\startstandardmakeup[align=middle]
+\startRUBY
+
+class Preferences
+  include Virtus.model
+
+  attribute :columns, Fixnum, :default => 2
+  attribute :scheme, String
+end
+
+class User < ActiveRecord::Base
+  serialize :preferences, Preferences
+end
+\stopRUBY
+\stopstandardmakeup
+\page
+
+\startstandardmakeup[align=middle]
+\startRUBY
+pref = Preferences.new(:columns => 2,
+                       :scheme => "dark")
+
+User.create(:name => "fgilcher",
+            :preferences => pref)
+User.first
+#=> #<User id: 1, name: "fgilcher", 
+       preferences: #<Preferences...>>
+\stopRUBY
+\stopstandardmakeup
+
+\page
+
+\startstandardmakeup[align=middle]
+Or any other store storing complex values (NoSQL)
+\stopstandardmakeup
+
+\page
+
+\startstandardmakeup[align=middle]
+Form objects
+\stopstandardmakeup
+
+\page
+
+\startstandardmakeup[align=middle]
+\startRUBY
+require 'active_model'
+
+class Preferences
+  include ActiveModel::Validations
+
+  validates_presence_of :columns, :scheme
+end
+\stopRUBY
+\stopstandardmakeup
+
+\page
+
+\startstandardmakeup[align=middle]
+Consider using Virtus every time you would use OpenStruct or Hash in anger!
+\stopstandardmakeup
+
+\page
+
+\startstandardmakeup[align=middle]
+Handling attributes
+\stopstandardmakeup
+
+\page
+
+\startstandardmakeup[align=middle]
+\startRUBY
+att = Preferences.attribute_set[:columns]
+att.name #=> :columns
+att.coerce("2") #=> 2
+att.default_value.value #=> 2
+\stopRUBY
+\stopstandardmakeup
+
+\page
+
+\startstandardmakeup[align=middle]
+\startRUBY
+hash.each do |k,v|
+  setter_name = "#{k}="
+  object.send(setter_name, v)
+end
+\stopRUBY
+\stopstandardmakeup
+
+\page
+
+\startstandardmakeup[align=middle]
+\startRUBY
+att.get(pref) #=> 2
+att.set(pref, 3) #=> 3
+\stopRUBY
+\stopstandardmakeup
+
+\page
+
+\startstandardmakeup[align=middle]
+Finally, a proper attribute setting API on all objects!
+\stopstandardmakeup
+
+\page
+
+\startstandardmakeup[align=middle]
+Final words
+\stopstandardmakeup
+
+\page
+
+\startstandardmakeup[align=middle]
+Virtus comes at a small cost, so it should be used for domain models only.
+\stopstandardmakeup
+
+\page
+
+\startstandardmakeup[align=middle]
+This cost does JIT away very well in most cases.
+\stopstandardmakeup
+
+\page
+
+\startstandardmakeup[align=middle]
+Virtus shines through what it doesn't do, not through what it does.
+\stopstandardmakeup
+\stoptext

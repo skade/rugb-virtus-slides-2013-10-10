@@ -6,3 +6,7 @@ See the compiled version here: https://speakerdeck.com/skade/virtus
 
 1. Install ConTeXt
 2. `context slides.tex`
+
+## Playing around
+
+Not a lot of interesting stuff, but try turning `showboxes` on or switching fonts.
